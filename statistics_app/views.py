@@ -4,7 +4,6 @@ import pandas as pd
 
 # Django Imports
 from django.template.loader import get_template
-from django.template import RequestContext
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
