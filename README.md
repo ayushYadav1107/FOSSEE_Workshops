@@ -210,7 +210,6 @@ Email notifications are sent at every key event (when supported by SMTP configur
 | **State / Auth** | React Context API + Django session cookies |
 | **Backend** | Django 4.x — custom JSON API views (no DRF) |
 | **Database** | SQLite (development) |
-| **Email** | Django `send_mail` via SMTP (optional for dev) |
 
 ---
 
