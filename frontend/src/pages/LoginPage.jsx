@@ -26,10 +26,6 @@ export default function LoginPage() {
       navigate(data.is_instructor ? '/dashboard' : '/status');
     } catch (err) {
       const msg = err.response?.data?.error || 'Login failed. Please try again.';
-      if (err.response?.data?.error === 'email_not_verified') {
-        navigate('/activate');
-        return;
-      }
       setError(msg);
     } finally {
       setLoading(false);

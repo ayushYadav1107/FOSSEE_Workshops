@@ -91,8 +91,6 @@ def api_login(request):
     user = authenticate(request, username=username, password=password)
     if user is None:
         return json_error('Invalid username or password', status=401)
-    if not user.profile.is_email_verified:
-        return JsonResponse({'error': 'email_not_verified', 'redirect': '/activate'}, status=403)
     login(request, user)
     return json_ok({
         'id': user.id,
@@ -111,22 +109,20 @@ def api_logout(request):
 
 @require_POST
 def api_register(request):
-    """Register a new coordinator."""
+    """Register a new coordinator (no email verification required)."""
     try:
         data = json.loads(request.body)
     except json.JSONDecodeError:
         return json_error('Invalid JSON')
     form = UserRegistrationForm(data)
     if form.is_valid():
-        username, password, key = form.save()
+        username, password, _key = form.save()
+        # Auto-verify the account so the user can log in immediately
         new_user = authenticate(username=username, password=password)
+        new_user.profile.is_email_verified = True
+        new_user.profile.save()
         login(request, new_user)
-        send_email(
-            request, call_on='Registration',
-            user_position='coordinator',
-            key=key
-        )
-        return JsonResponse({'ok': True, 'redirect': '/activate'}, status=201)
+        return JsonResponse({'ok': True, 'redirect': '/login'}, status=201)
     return JsonResponse({'ok': False, 'errors': form.errors}, status=400)
 
 

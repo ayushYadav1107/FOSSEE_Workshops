@@ -26,8 +26,10 @@ export function AuthProvider({ children }) {
   };
 
   const logout = async () => {
-    await client.post('/auth/logout/');
+    try { await client.post('/auth/logout/'); } catch (_) { /* ignore */ }
     setUser(null);
+    // Replace history so the back-button can't restore a cached filled form
+    window.history.replaceState(null, '', '/login');
   };
 
   const refreshUser = async () => {

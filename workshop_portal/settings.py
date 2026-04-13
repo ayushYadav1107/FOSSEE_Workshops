@@ -168,7 +168,10 @@ EMAIL_USE_TLS = EMAIL_USE_TLS
 EMAIL_TIMEOUT = 300
 SENDER_EMAIL = SENDER_EMAIL
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# Use SMTP to actually send emails.
+# Set EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# below if you just want to see emails printed in the terminal (dev mode).
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # Change this to the production url
 PRODUCTION_URL = 'http://localhost:8000'

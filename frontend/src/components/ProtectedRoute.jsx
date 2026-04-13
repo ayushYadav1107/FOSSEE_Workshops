@@ -7,7 +7,7 @@ export default function ProtectedRoute({ children, requireInstructor = false }) 
 
   if (loading) return <Loader fullPage />;
   if (!user) return <Navigate to="/login" replace />;
-  if (!user.profile?.is_email_verified) return <Navigate to="/activate" replace />;
+  // Email verification removed — all authenticated users are allowed.
   if (requireInstructor && !user.is_instructor) return <Navigate to="/status" replace />;
 
   return children;
