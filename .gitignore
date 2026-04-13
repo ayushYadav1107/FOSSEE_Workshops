@@ -42,6 +42,8 @@ db.sqlite3
 #Vim
 *.swp
 
-#images/gif
-*.png
+#images/gif — exclude generated/media assets but allow docs screenshots
 *.gif
+workshop_app/static/**/*.png
+frontend/public/*.png
+!docs/screenshots/*.png
