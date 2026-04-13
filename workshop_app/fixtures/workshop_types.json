@@ -1,0 +1,62 @@
+[
+  {
+    "model": "workshop_app.workshoptype",
+    "pk": 1,
+    "fields": {
+      "name": "Python",
+      "description": "A hands-on workshop introducing Python programming from scratch. Covers variables, data types, control flow, functions, file I/O, and an introduction to popular libraries such as NumPy and Matplotlib. Suitable for students from all engineering branches with little or no prior programming experience.",
+      "duration": 2,
+      "terms_and_conditions": "1. The coordinator must ensure a minimum attendance of 30 students.\n2. A computer lab with internet access must be arranged by the host institute.\n3. Python 3.x must be pre-installed on all lab systems before the workshop date.\n4. The coordinator is responsible for providing LCD projector and audio setup.\n5. Workshop materials (slides, scripts) will be shared 3 days in advance.\n6. No rescheduling within 7 days of the confirmed date."
+    }
+  },
+  {
+    "model": "workshop_app.workshoptype",
+    "pk": 2,
+    "fields": {
+      "name": "Scilab",
+      "description": "An introductory workshop on Scilab — the free, open-source alternative to MATLAB. Covers matrix operations, plotting, scripting, and solving engineering problems using Scilab's built-in toolboxes. Ideal for students in electrical, mechanical, and civil engineering departments.",
+      "duration": 2,
+      "terms_and_conditions": "1. A minimum of 25 registered participants is required to confirm the workshop.\n2. Scilab must be installed on all machines prior to the workshop.\n3. The host institute must provide stable internet connectivity.\n4. Coordinators must submit a signed confirmation letter at least 10 days before the event.\n5. FOSSEE retains the right to cancel a workshop if infrastructure requirements are not met.\n6. Certificates will be issued only to participants who attend both days."
+    }
+  },
+  {
+    "model": "workshop_app.workshoptype",
+    "pk": 3,
+    "fields": {
+      "name": "OpenFOAM",
+      "description": "A practical workshop on Computational Fluid Dynamics (CFD) using OpenFOAM — a leading open-source CFD toolbox. Participants will learn mesh generation, solver setup, boundary conditions, post-processing with ParaView, and working with standard tutorial cases. Best suited for mechanical and aerospace engineering students.",
+      "duration": 3,
+      "terms_and_conditions": "1. OpenFOAM and ParaView must be pre-installed; a Linux or WSL environment is required.\n2. Minimum 20 participants with a background in fluid mechanics or related subjects.\n3. Each participant must bring their own laptop with at least 8 GB RAM.\n4. The coordinator must share hostel/accommodation details for outstation instructors.\n5. Travel reimbursement for the instructor will be borne by the host institute.\n6. Workshop content is for academic use only and may not be redistributed commercially."
+    }
+  },
+  {
+    "model": "workshop_app.workshoptype",
+    "pk": 4,
+    "fields": {
+      "name": "DWSIM",
+      "description": "A workshop on chemical process simulation using DWSIM — an open-source process simulator compliant with CAPE-OPEN standards. Topics include steady-state flowsheet simulation, thermodynamic package selection, unit operations, and sensitivity analysis. Targeted at chemical engineering students.",
+      "duration": 2,
+      "terms_and_conditions": "1. DWSIM must be installed on all participant machines before the workshop.\n2. Minimum 20 participants from chemical or process engineering backgrounds.\n3. A projector and whiteboard must be available throughout the workshop.\n4. Participants are expected to have completed basic thermodynamics coursework.\n5. The coordinator must provide meals/refreshments for the instructor on all workshop days.\n6. Attendance of at least 80% on each day is mandatory for certification."
+    }
+  },
+  {
+    "model": "workshop_app.workshoptype",
+    "pk": 5,
+    "fields": {
+      "name": "eSim",
+      "description": "An introductory workshop on electronic circuit design and simulation using eSim — an EDA tool developed by FOSSEE, IIT Bombay. Participants will learn schematic creation, SPICE simulation, PCB design basics, and KiCad integration. Ideal for electronics and electrical engineering students.",
+      "duration": 2,
+      "terms_and_conditions": "1. eSim software must be installed on all systems prior to the workshop date.\n2. A minimum of 25 participants is required; below this threshold the workshop may be rescheduled.\n3. Each system must have at least 4 GB RAM and a functional display/monitor.\n4. Coordinators must circulate a pre-workshop reading list to registered participants.\n5. The host institute is responsible for arranging accommodation for outstation instructors.\n6. Any disputes regarding workshop conduct must be reported within 48 hours to FOSSEE."
+    }
+  },
+  {
+    "model": "workshop_app.workshoptype",
+    "pk": 6,
+    "fields": {
+      "name": "R",
+      "description": "A beginner-to-intermediate workshop on statistical computing using the R programming language. Covers R basics, data frames, ggplot2 visualisation, dplyr data manipulation, and an introduction to regression models. Designed for students in computer science, mathematics, or any branch involving data analysis.",
+      "duration": 2,
+      "terms_and_conditions": "1. R and RStudio must be pre-installed on all workshop machines.\n2. A minimum of 30 participants is required to confirm the workshop.\n3. Participants must have a basic understanding of statistics.\n4. All workshop materials remain the intellectual property of FOSSEE, IIT Bombay.\n5. The coordinator must send a participant list 5 days before the event.\n6. Certificates are issued electronically within 15 working days after the workshop."
+    }
+  }
+]
