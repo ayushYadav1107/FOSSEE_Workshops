@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import client from '../api/client';
+import { useAuth } from '../context/AuthContext';
 import Loader from '../components/Loader';
+import { BarChart2, SlidersHorizontal, List } from 'lucide-react';
 import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
 const COLORS = ['#4f46e5', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
@@ -43,10 +45,10 @@ export default function StatisticsPage() {
         Public overview of workshops across India
       </p>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: '1.5rem', alignItems: 'start' }}>
+      <div className="stats-layout" style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: '1.5rem', alignItems: 'start' }}>
         {/* Filters */}
-        <div className="glass-card" style={{ padding: '1.5rem', position: 'sticky', top: '5rem' }}>
-          <div className="section-title">🔍 Filters</div>
+        <div className="glass-card stats-filter-sticky" style={{ padding: '1.5rem', position: 'sticky', top: '5rem' }}>
+          <div className="section-title"><SlidersHorizontal size={15} strokeWidth={2} /> Filters</div>
           <form onSubmit={handleFilter}>
             <div className="form-group">
               <label className="form-label">From Date</label>
@@ -89,7 +91,7 @@ export default function StatisticsPage() {
           {(barData.length > 0 || pieData.length > 0) && (
             <div className="glass-card mb-2" style={{ padding: '1.5rem' }}>
               <div className="flex-between mb-2">
-                <div className="section-title" style={{ margin: 0 }}>📊 Charts</div>
+                <div className="section-title" style={{ margin: 0 }}><BarChart2 size={15} strokeWidth={2} /> Charts</div>
                 <div className="flex gap-1">
                   <button className={`btn btn-sm ${activeChart === 'bar' ? 'btn-primary' : 'btn-ghost'}`} onClick={() => setActiveChart('bar')}>State</button>
                   <button className={`btn btn-sm ${activeChart === 'pie' ? 'btn-primary' : 'btn-ghost'}`} onClick={() => setActiveChart('pie')}>Type</button>
@@ -121,7 +123,7 @@ export default function StatisticsPage() {
           {/* Table */}
           <div className="glass-card" style={{ padding: '1.5rem' }}>
             <div className="flex-between mb-2">
-              <div className="section-title" style={{ margin: 0 }}>📋 Workshops</div>
+              <div className="section-title" style={{ margin: 0 }}><List size={15} strokeWidth={2} /> Workshops</div>
               <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>
                 Page {data?.current_page} of {data?.num_pages}
               </span>
@@ -135,9 +137,13 @@ export default function StatisticsPage() {
                     </thead>
                     <tbody>
                       {(data?.workshops || []).map((w, i) => (
-                        <tr key={w.id}>
+                        <tr key={w.id}
+                          onClick={() => window.location.href = `/workshops/${w.id}`}
+                          style={{ cursor: 'pointer' }}
+                          title="Click to view full workshop details"
+                        >
                           <td style={{ color: 'var(--text-dim)' }}>{i + 1}</td>
-                          <td style={{ fontWeight: 500 }}>{w.coordinator_name}</td>
+                          <td style={{ fontWeight: 500, color: 'var(--accent)' }}>{w.coordinator_name}</td>
                           <td style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>{w.institute}</td>
                           <td style={{ color: 'var(--text-muted)' }}>{w.instructor_name || '—'}</td>
                           <td>{w.workshop_type}</td>

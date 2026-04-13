@@ -8,7 +8,6 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch CSRF token on mount, then check auth
     client.get('/auth/csrf/')
       .then(() => client.get('/auth/user/'))
       .then(res => {
@@ -28,7 +27,6 @@ export function AuthProvider({ children }) {
   const logout = async () => {
     try { await client.post('/auth/logout/'); } catch (_) { /* ignore */ }
     setUser(null);
-    // Replace history so the back-button can't restore a cached filled form
     window.history.replaceState(null, '', '/login');
   };
 

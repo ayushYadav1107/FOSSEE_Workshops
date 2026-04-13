@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
@@ -10,6 +10,11 @@ export default function LoginPage() {
   const [form, setForm] = useState({ username: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = ''; };
+  }, []);
 
   if (user) {
     navigate(user.is_instructor ? '/dashboard' : '/status', { replace: true });
@@ -34,15 +39,12 @@ export default function LoginPage() {
 
   return (
     <div className="login-page">
-      {/* Animated background blobs */}
       <div className="blob blob-1" />
       <div className="blob blob-2" />
       <div className="blob blob-3" />
 
-      {/* Left panel — hero */}
       <div className="login-hero animate-fade-left">
         <div className="hero-content">
-          <div className="hero-badge">⚡ FOSSEE Workshops</div>
           <h1 className="hero-title">Connect. Learn.<br />Grow Together.</h1>
           <p className="hero-desc">
             A platform for instructors and coordinators to seamlessly organise 

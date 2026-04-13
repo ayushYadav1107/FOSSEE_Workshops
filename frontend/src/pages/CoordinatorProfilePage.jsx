@@ -4,6 +4,7 @@ import client from '../api/client';
 import Loader from '../components/Loader';
 import StatusBadge from '../components/StatusBadge';
 import toast from 'react-hot-toast';
+import { History } from 'lucide-react';
 
 export default function CoordinatorProfilePage() {
   const { id } = useParams();
@@ -44,7 +45,7 @@ export default function CoordinatorProfilePage() {
       </div>
 
       <div className="glass-card" style={{ padding: '1.75rem' }}>
-        <div className="section-title">🎯 Workshop History</div>
+        <div className="section-title"><History size={15} strokeWidth={2} /> Workshop History</div>
         {(!data.workshops || data.workshops.length === 0) ? (
           <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', padding: '1rem 0' }}>No workshops yet.</p>
         ) : (

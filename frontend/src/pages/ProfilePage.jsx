@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import client from '../api/client';
 import toast from 'react-hot-toast';
+import { PenLine, LayoutList } from 'lucide-react';
 import Loader from '../components/Loader';
 import { useAuth } from '../context/AuthContext';
 
@@ -74,7 +75,7 @@ export default function ProfilePage() {
 
       {editing ? (
         <div className="glass-card" style={{ padding: '2rem' }}>
-          <div className="section-title">✏️ Edit Profile</div>
+          <div className="section-title"><PenLine size={15} strokeWidth={2} /> Edit Profile</div>
           <form onSubmit={handleSave}>
             <div className="grid-2">
               <div className="form-group">
@@ -120,7 +121,7 @@ export default function ProfilePage() {
         </div>
       ) : (
         <div className="glass-card" style={{ padding: '2rem' }}>
-          <div className="section-title">📋 Profile Details</div>
+          <div className="section-title"><LayoutList size={15} strokeWidth={2} /> Profile Details</div>
           <div className="grid-2" style={{ gap: '1.5rem' }}>
             {[
               ['Institute', data?.profile?.institute],

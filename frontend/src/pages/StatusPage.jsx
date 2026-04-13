@@ -4,6 +4,17 @@ import client from '../api/client';
 import StatusBadge from '../components/StatusBadge';
 import Loader from '../components/Loader';
 import toast from 'react-hot-toast';
+import TipsPanel from '../components/TipsPanel';
+import { CheckCircle, Clock, BookOpen, PenLine, CalendarDays, MessageSquare, User } from 'lucide-react';
+
+const COORDINATOR_TIPS = [
+  { icon: <BookOpen size={15} strokeWidth={2} />, text: 'Browse Workshop Types to find the right workshop before proposing.' },
+  { icon: <PenLine size={15} strokeWidth={2} />, text: 'Click "Propose Workshop" to submit a date for your institute.' },
+  { icon: <Clock size={15} strokeWidth={2} />, text: 'After proposing, your request waits for an instructor to accept it.' },
+  { icon: <CheckCircle size={15} strokeWidth={2} />, text: 'Once accepted, the workshop shows under "Booked Workshops" with instructor details.' },
+  { icon: <MessageSquare size={15} strokeWidth={2} />, text: 'Click any workshop to view full details and leave comments.' },
+  { icon: <User size={15} strokeWidth={2} />, text: 'Update your Profile to keep your contact info and institute details current.' },
+];
 
 export default function StatusPage() {
   const [data, setData] = useState(null);
@@ -21,12 +32,17 @@ export default function StatusPage() {
     <div className="page-container animate-fade-in" style={{ paddingTop: '5rem' }}>
       <div className="flex-between mb-2" style={{ flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <h1 className="page-title">My Workshops</h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Track your proposed and accepted workshops</p>
+          <h1 className="page-title">My Workshop Proposals</h1>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Propose a date → instructor accepts → workshop booked</p>
         </div>
         <Link to="/propose" className="btn btn-primary">+ Propose Workshop</Link>
       </div>
 
+      <TipsPanel
+        storageKey="tips_coordinator"
+        title="💡 Getting Started — Coordinator Guide"
+        tips={COORDINATOR_TIPS}
+      />
       {accepted.length === 0 && proposed.length === 0 ? (
         <div className="glass-card" style={{ padding: '4rem', textAlign: 'center' }}>
           <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🎯</div>
@@ -37,7 +53,7 @@ export default function StatusPage() {
       ) : (
         <>
           <div className="glass-card mb-2" style={{ padding: '1.5rem' }}>
-            <div className="section-title">✅ Accepted Workshops</div>
+            <div className="section-title">✅ Booked Workshops — Confirmed by Instructor</div>
             {accepted.length === 0 ? (
               <p style={{ color: 'var(--text-muted)', padding: '1rem 0', fontSize: '0.875rem' }}>No accepted workshops yet.</p>
             ) : (
@@ -62,7 +78,7 @@ export default function StatusPage() {
           </div>
 
           <div className="glass-card" style={{ padding: '1.5rem' }}>
-            <div className="section-title">⏳ My Proposals</div>
+            <div className="section-title">🕐 Proposed Dates — Awaiting Instructor</div>
             {proposed.length === 0 ? (
               <p style={{ color: 'var(--text-muted)', padding: '1rem 0', fontSize: '0.875rem' }}>No pending proposals.</p>
             ) : (

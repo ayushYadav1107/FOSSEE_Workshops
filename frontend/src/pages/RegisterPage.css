@@ -7,6 +7,15 @@
   padding: 5rem 1.5rem 3rem;
   position: relative;
   overflow: hidden;
+  background-image:
+    linear-gradient(
+      rgba(8, 8, 18, 0.82),
+      rgba(8, 8, 18, 0.82)
+    ),
+    url('/campus_hero.png');
+  background-size: cover;
+  background-position: center 40%;
+  background-attachment: fixed;
 }
 
 /* Decorative background blobs */
@@ -104,11 +113,12 @@
 
 .reg-step-label {
   font-size: 0.72rem;
-  font-weight: 600;
-  color: var(--text-dim);
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.75);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   transition: color 0.3s ease;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.8);
 }
 
 .reg-step-item.active .reg-step-label,
@@ -120,6 +130,10 @@
 .reg-card {
   padding: 0;
   overflow: hidden;
+  background: rgba(12, 12, 24, 0.94) !important;
+  backdrop-filter: blur(32px) !important;
+  -webkit-backdrop-filter: blur(32px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 .reg-card-header {

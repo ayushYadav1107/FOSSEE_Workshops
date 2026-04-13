@@ -37,11 +37,7 @@ def api_public_stats(request):
         if workshoptype:
             workshops = workshops.filter(workshop_type_id=workshoptype)
     else:
-        today = timezone.now()
-        upto = today + dt.timedelta(days=15)
-        workshops = Workshop.objects.filter(
-            date__range=(today, upto), status=1
-        ).order_by('date')
+        workshops = Workshop.objects.filter(status=1).order_by('-date')
 
     user = request.user
     if show_workshops and user.is_authenticated:
@@ -66,7 +62,9 @@ def api_public_stats(request):
             'id': w.id,
             'coordinator_name': w.coordinator.get_full_name(),
             'institute': inst,
-            'instructor_name': w.instructor.get_full_name() if w.instructor else '',
+            'instructor_name': (
+                w.instructor.get_full_name() or w.instructor.username
+            ) if w.instructor else '',
             'workshop_type': w.workshop_type.name,
             'date': str(w.date),
         })

@@ -4,6 +4,17 @@ import client from '../api/client';
 import StatusBadge from '../components/StatusBadge';
 import Loader from '../components/Loader';
 import toast from 'react-hot-toast';
+import TipsPanel from '../components/TipsPanel';
+import { Clock, CheckCircle, CalendarDays, User, MessageSquare, BarChart2 } from 'lucide-react';
+
+const INSTRUCTOR_TIPS = [
+  { icon: <Clock size={15} strokeWidth={2} />, text: 'Pending coordinator date requests are waiting for your review.' },
+  { icon: <CheckCircle size={15} strokeWidth={2} />, text: 'Click "Accept" on a request to confirm it. This cannot be undone.' },
+  { icon: <CalendarDays size={15} strokeWidth={2} />, text: 'You can reschedule any upcoming confirmed workshop from the table.' },
+  { icon: <User size={15} strokeWidth={2} />, text: "Click a coordinator's name to see their profile and full workshop history." },
+  { icon: <MessageSquare size={15} strokeWidth={2} />, text: 'Open any workshop to add private or public comments for the coordinator.' },
+  { icon: <BarChart2 size={15} strokeWidth={2} />, text: 'Check the Statistics page for a nationwide overview of workshops.' },
+];
 
 export default function DashboardPage() {
   const [data, setData] = useState(null);
@@ -46,8 +57,8 @@ export default function DashboardPage() {
     <div className="page-container animate-fade-in" style={{ paddingTop: '5rem' }}>
       <div className="flex-between mb-2" style={{ flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <h1 className="page-title">Instructor Dashboard</h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Manage your workshops and proposals</p>
+          <h1 className="page-title">Review Workshop Requests</h1>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Coordinators propose dates → you accept to confirm the booking</p>
         </div>
         <div className="flex gap-1">
           <span className="badge badge-success">✓ {accepted.length} Accepted</span>
@@ -55,9 +66,14 @@ export default function DashboardPage() {
         </div>
       </div>
 
+      <TipsPanel
+        storageKey="tips_instructor"
+        title="💡 Getting Started — Instructor Guide"
+        tips={INSTRUCTOR_TIPS}
+      />
       {/* Pending Proposals */}
       <div className="glass-card mb-2" style={{ padding: '1.5rem' }}>
-        <div className="section-title">⏳ Pending Proposals</div>
+        <div className="section-title"><Clock size={15} strokeWidth={2} /> Pending Coordinator Requests</div>
         {pending.length === 0 ? (
           <div className="empty-state" style={{ padding: '2rem' }}>
             <div className="empty-state-icon">📭</div>
@@ -102,14 +118,13 @@ export default function DashboardPage() {
         )}
       </div>
 
-      {/* Accepted */}
       <div className="glass-card" style={{ padding: '1.5rem' }}>
-        <div className="section-title">✅ Accepted Workshops</div>
+        <div className="section-title"><CheckCircle size={15} strokeWidth={2} /> Confirmed Bookings — Booked Workshops</div>
         {accepted.length === 0 ? (
           <div className="empty-state" style={{ padding: '2rem' }}>
             <div className="empty-state-icon">📅</div>
-            <h3>No accepted workshops yet</h3>
-            <p>Accept proposals above to see them here</p>
+            <h3>No confirmed bookings yet</h3>
+            <p>Accept a pending request above to confirm a workshop</p>
           </div>
         ) : (
           <div style={{ overflowX: 'auto' }}>

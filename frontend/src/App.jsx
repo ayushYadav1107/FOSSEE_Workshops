@@ -6,18 +6,19 @@ import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
 import Loader from './components/Loader';
 
-// Pages
-import LoginPage      from './pages/LoginPage';
-import RegisterPage   from './pages/RegisterPage';
-import ActivationPage from './pages/ActivationPage';
-import DashboardPage  from './pages/DashboardPage';
-import StatusPage     from './pages/StatusPage';
-import ProposePage    from './pages/ProposePage';
+import LoginPage            from './pages/LoginPage';
+import RegisterPage         from './pages/RegisterPage';
+import ActivationPage       from './pages/ActivationPage';
+import HomePage             from './pages/HomePage';
+import DashboardPage        from './pages/DashboardPage';
+import StatusPage           from './pages/StatusPage';
+import ProposePage          from './pages/ProposePage';
 import WorkshopTypesPage    from './pages/WorkshopTypesPage';
 import WorkshopDetailPage   from './pages/WorkshopDetailPage';
 import StatisticsPage       from './pages/StatisticsPage';
 import ProfilePage          from './pages/ProfilePage';
 import CoordinatorProfilePage from './pages/CoordinatorProfilePage';
+import WorkshopTypeDetailPage from './pages/WorkshopTypeDetailPage';
 
 function AppRoutes() {
   const { user, loading } = useAuth();
@@ -28,21 +29,20 @@ function AppRoutes() {
       <Navbar />
       <main style={{ flex: 1 }}>
         <Routes>
-          {/* Public */}
           <Route path="/login"      element={<LoginPage />} />
           <Route path="/register"   element={<RegisterPage />} />
           <Route path="/activate"   element={<ActivationPage />} />
           <Route path="/statistics" element={<StatisticsPage />} />
           <Route path="/types"      element={<WorkshopTypesPage />} />
+          <Route path="/types/:id"  element={<WorkshopTypeDetailPage />} />
 
-          {/* Root redirect */}
           <Route path="/" element={
-            user
-              ? <Navigate to={user.is_instructor ? '/dashboard' : '/status'} replace />
-              : <Navigate to="/login" replace />
+            user ? <Navigate to="/home" replace /> : <Navigate to="/login" replace />
           } />
 
-          {/* Protected — any authenticated user */}
+          <Route path="/home" element={
+            <ProtectedRoute><HomePage /></ProtectedRoute>
+          } />
           <Route path="/status" element={
             <ProtectedRoute><StatusPage /></ProtectedRoute>
           } />
@@ -56,7 +56,6 @@ function AppRoutes() {
             <ProtectedRoute><ProfilePage /></ProtectedRoute>
           } />
 
-          {/* Protected — instructor only */}
           <Route path="/dashboard" element={
             <ProtectedRoute requireInstructor><DashboardPage /></ProtectedRoute>
           } />
@@ -64,7 +63,6 @@ function AppRoutes() {
             <ProtectedRoute requireInstructor><CoordinatorProfilePage /></ProtectedRoute>
           } />
 
-          {/* Catch-all */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>

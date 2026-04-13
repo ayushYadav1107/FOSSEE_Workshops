@@ -15,11 +15,9 @@ from django.views.decorators.http import require_http_methods, require_POST, req
 from django.db.models import Q
 
 from .forms import UserRegistrationForm, WorkshopForm, CommentsForm, WorkshopTypeForm
-from .models import Profile, User, Workshop, Comment, WorkshopType, AttachmentFile, states
+from .models import Profile, User, Workshop, Comment, WorkshopType, AttachmentFile, states as STATES_LIST
 from .send_mails import send_email
 
-
-# ─── Helpers ────────────────────────────────────────────────────────────────────
 
 def is_instructor(user):
     return user.groups.filter(name='instructor').exists()
@@ -36,8 +34,6 @@ def json_ok(data=None, **kwargs):
     payload.update(kwargs)
     return JsonResponse(payload)
 
-
-# ─── Auth ────────────────────────────────────────────────────────────────────────
 
 @require_GET
 def api_csrf(request):
@@ -199,17 +195,24 @@ def api_accept_workshop(request, workshop_id):
     workshop.status = 1
     workshop.instructor = request.user
     workshop.save()
-    coordinator_profile = workshop.coordinator.profile
-    send_email(request, call_on='Booking Confirmed', user_position='instructor',
-               workshop_date=str(workshop.date), workshop_title=workshop.workshop_type.name,
-               user_name=workshop.coordinator.get_full_name(),
-               other_email=workshop.coordinator.email,
-               phone_number=coordinator_profile.phone_number,
-               institute=coordinator_profile.institute)
-    send_email(request, call_on='Booking Confirmed',
-               workshop_date=str(workshop.date), workshop_title=workshop.workshop_type.name,
-               other_email=workshop.coordinator.email,
-               phone_number=request.user.profile.phone_number)
+    try:
+        coordinator_profile = workshop.coordinator.profile
+        send_email(
+            request, call_on='Booking Confirmed', user_position='instructor',
+            workshop_date=str(workshop.date), workshop_title=workshop.workshop_type.name,
+            user_name=workshop.coordinator.get_full_name(),
+            other_email=workshop.coordinator.email,
+            phone_number=coordinator_profile.phone_number,
+            institute=coordinator_profile.institute,
+        )
+        send_email(
+            request, call_on='Booking Confirmed', user_position='coordinator',
+            workshop_date=str(workshop.date), workshop_title=workshop.workshop_type.name,
+            other_email=workshop.coordinator.email,
+            phone_number=getattr(getattr(request.user, 'profile', None), 'phone_number', ''),
+        )
+    except Exception:
+        pass
     return json_ok({'message': 'Workshop accepted'})
 
 
@@ -234,11 +237,14 @@ def api_change_workshop_date(request, workshop_id):
         return json_error('Not found', 404)
     old_date = workshop.first().date
     workshop.update(date=new_workshop_date)
-    send_email(request, call_on='Change Date', user_position='instructor',
-               workshop_date=str(old_date), new_workshop_date=str(new_workshop_date.date()))
-    send_email(request, call_on='Change Date',
-               new_workshop_date=str(new_workshop_date.date()), workshop_date=str(old_date),
-               other_email=workshop.first().coordinator.email)
+    try:
+        send_email(request, call_on='Change Date', user_position='instructor',
+                   workshop_date=str(old_date), new_workshop_date=str(new_workshop_date.date()))
+        send_email(request, call_on='Change Date',
+                   new_workshop_date=str(new_workshop_date.date()), workshop_date=str(old_date),
+                   other_email=workshop.first().coordinator.email)
+    except Exception:
+        pass
     return json_ok({'message': 'Date updated'})
 
 
@@ -263,12 +269,15 @@ def api_propose_workshop(request):
         ).exists():
             return json_error('A workshop with these details already exists')
         form_data.save()
-        instructors = Profile.objects.filter(position='instructor')
-        for i in instructors:
-            send_email(request, call_on='Proposed Workshop', user_position='instructor',
-                       workshop_date=str(form_data.date), workshop_title=form_data.workshop_type,
-                       user_name=user.get_full_name(), other_email=i.user.email,
-                       phone_number=user.profile.phone_number, institute=user.profile.institute)
+        try:
+            instructors = Profile.objects.filter(position='instructor')
+            for i in instructors:
+                send_email(request, call_on='Proposed Workshop', user_position='instructor',
+                           workshop_date=str(form_data.date), workshop_title=form_data.workshop_type,
+                           user_name=user.get_full_name(), other_email=i.user.email,
+                           phone_number=user.profile.phone_number, institute=user.profile.institute)
+        except Exception:
+            pass
         return JsonResponse({'ok': True, 'message': 'Workshop proposed'}, status=201)
     return JsonResponse({'ok': False, 'errors': form.errors}, status=400)
 
@@ -351,23 +360,47 @@ def api_workshop_detail(request, workshop_id):
         'created_date': c.created_date.isoformat(),
     } for c in comments_qs]
     try:
-        inst = workshop.coordinator.profile.institute
+        coord_profile = workshop.coordinator.profile
+        inst          = coord_profile.institute
+        location      = coord_profile.location
+        state_code    = coord_profile.state
+        coord_phone   = coord_profile.phone_number
     except Exception:
-        inst = ''
+        inst = location = state_code = coord_phone = ''
+
+    instructor_name = instructor_phone = ''
+    if workshop.instructor:
+        instructor_name = (
+            workshop.instructor.get_full_name() or workshop.instructor.username
+        )
+        try:
+            instructor_phone = workshop.instructor.profile.phone_number
+        except Exception:
+            pass
+
+    states_map = dict(STATES_LIST)
+    state_label = states_map.get(state_code, state_code)
+
     return JsonResponse({
         'id': workshop.id,
-        'coordinator_name': workshop.coordinator.get_full_name(),
+        'coordinator_name': workshop.coordinator.get_full_name() or workshop.coordinator.username,
         'coordinator_id': workshop.coordinator.id,
+        'coordinator_phone': coord_phone,
         'institute': inst,
-        'workshop_type': str(workshop.workshop_type),
+        'location': location,
+        'state': state_label,
+        'instructor_name': instructor_name,
+        'instructor_phone': instructor_phone,
+        'workshop_type': workshop.workshop_type.name,
+        'workshop_duration': workshop.workshop_type.duration,
+        'workshop_description': workshop.workshop_type.description,
+        'workshop_type_id': workshop.workshop_type.id,
         'date': str(workshop.date),
         'status': workshop.status,
         'status_label': workshop.get_status(),
         'comments': comments,
     })
 
-
-# ─── Profile ─────────────────────────────────────────────────────────────────────
 
 @login_required
 @require_GET
